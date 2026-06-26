@@ -1,4 +1,6 @@
-## --------What Happens When You Hit Enter --------------
+-----------------------DAY1-TASK------------------------------
+
+ ## --------What Happens When You Hit Enter --------------
 ***A look under the hood of loading 
 shorterloop.com: DNS resolution → TCP/TLS handshake → HTTP request/response → browser paint.
  "Instant" is actually a chain of several 
@@ -81,3 +83,42 @@ pipeline — DNS lookup, secure connection setup, dozens of
 parallel resource fetches, then rendering. Understanding each
 layer makes debugging slow sites or failed connections way
 easier later on.
+
+--------------------------------DAY-2 TASK--------------------------------------
+
+##----------------- HTML Resume-----------------------
+
+## Overview
+**Built a semantic HTML resume using only HTML5 elements without CSS, `<div>`, or `<span>`. The project focuses on creating a structured and accessible resume using semantic tags.**
+
+## Features
+- Semantic HTML5 structure
+- Navigation menu
+- About section
+- Education details
+- Technical skills
+- Projects
+- Certifications
+- Contact information
+- Profile image
+- Footer declaration
+
+## Technologies Used
+- HTML5
+
+## Learning Outcomes
+- Semantic HTML elements
+- Internal page navigation
+- Tables
+- Lists
+- Images
+- Hyperlinks
+- Resume structuring
+
+## Project Structure
+
+```
+Day-02-HTML-Resume/
+│── index.html
+│── profile.jpg
+```
