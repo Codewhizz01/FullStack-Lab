@@ -1,193 +1,159 @@
 -----------------------------Day-9 TASK Objects & Array Methods-----------------------------------------
 
-## 1. What is an object, really?
 
-Imagine you're storing information about a student. Without objects, you'd end up with three separate loose variables floating around:
 
-```js
-let studentName = "Divya";
-let studentRoll = 21;
-let studentMarks = 88;
+## What Was Covered
+
+### 1. Objects
+- An object is a collection of related data stored as key-value pairs.
+- Example: a student's details (name, age, city, marks) grouped in one place instead of separate variables.
+- Objects are used because they keep code readable (keys explain the data), reusable, and maintainable.
+- Used everywhere in real apps: users, products, orders, employees.
+
+### 2. Accessing Properties
+- **Dot notation:** `student.name` — the everyday, default choice.
+- **Bracket notation:** `student["age"]` — required when the key is stored in a variable, or contains spaces/special characters.
+
+### 3. Add, Update, Delete Properties
+- **Add:** `student.school = "ABC School";`
+- **Update:** `student.marks = 95;`
+- **Delete:** `delete student.city;`
+
+### 4. Methods and `this`
+- A method is a function stored inside an object.
+- Inside a method, `this` refers to the object itself, allowing it to access its own properties.
+- Example: `greet() { console.log("Hello " + this.name); }`
+
+### 5. Looping Through an Object
+- `for...in` loop visits every key in the object.
+- Three built-in helpers convert an object into arrays:
+  | Method | Returns |
+  |---|---|
+  | `Object.keys(obj)` | array of keys |
+  | `Object.values(obj)` | array of values |
+  | `Object.entries(obj)` | array of [key, value] pairs |
+
+### 6. Nested Objects
+- An object can contain another object inside it.
+- Accessed by chaining dots: `student.address.city`
+
+### 7. Arrays of Objects
+- An array stores multiple values in order.
+- An array of objects is the shape most real app data takes — a list of products, users, or orders.
+- Confirmed by observing a live network call on shorterloop.com in DevTools: the API response came back exactly as an array of objects.
+
+### 8. Array Methods
+
+| Method | Returns | Use Case |
+|---|---|---|
+| `forEach` | nothing | run code on each item (e.g. print every name) |
+| `map` | new array | transform every item (e.g. extract just names) |
+| `filter` | new array | keep items matching a condition (e.g. price > 10000) |
+| `find` | one item | first match only (e.g. find product by name) |
+| `some` | true/false | does at least one item match? |
+| `every` | true/false | do all items match? |
+| `sort` | sorted array | reorder items (e.g. cheapest first) |
+| `reduce` | one value | combine all items into a single total |
+
+- **Key distinction:** `map`/`filter` return new arrays. `find` returns a single item. `some`/`every` return booleans. `reduce` returns one combined value. `forEach` returns nothing — it just executes.
+
+
+
+
+## Interview Question Answers
+
+**1. What is an object?**
+A collection of related data stored as key-value pairs, grouped under one variable (e.g. a student's name, age, and marks kept together instead of separate variables).
+
+**2. Difference between an object and an array?**
+An object stores data as key-value pairs, accessed by key name (`student.name`). An array stores data as an ordered list, accessed by numeric index (`arr[0]`). Objects describe "things with properties"; arrays describe "ordered collections."
+
+**3. Difference between dot and bracket notation?**
+Dot notation (`student.name`) is the everyday choice — clean and readable. Bracket notation (`student["age"]`) is required when the key is stored in a variable, or contains spaces/special characters/starts with a number.
+
+**4. What is the `this` keyword?**
+Inside an object method, `this` refers to the object the method was called on, letting the method access that object's own properties (e.g. `this.name` inside `greet()`).
+
+**5. Difference between `map()` and `forEach()`?**
+`map()` returns a new array built from the transformed items. `forEach()` returns nothing — it just runs a function on each item (used for side effects like logging).
+
+**6. Difference between `filter()` and `find()`?**
+`filter()` returns a new array of *all* items matching a condition. `find()` returns only the *first* matching item (not an array), or `undefined` if none match.
+
+**7. What does `reduce()` do?**
+Boils an array down to a single value (sum, count, object, etc.) by running an accumulator function over each item, starting from an initial value.
+
+**8. When do you use `some()` and `every()`?**
+`some()` checks if *at least one* item satisfies a condition (returns true/false). `every()` checks if *all* items satisfy a condition (returns true/false). Used for validation checks — e.g. "is anything in stock" vs "is everything in stock."
+
+// Day 9 - Practice Answers
+
+// 1 & 2. Create Employee, Mobile, Car objects + add/update/delete
+```
+const employee = { name: "Aman", role: "Developer", salary: 50000 };
+employee.dept = "Engineering";      // add
+employee.salary = 55000;            // update
+delete employee.role;               // delete
+```
 ```
 
-That's messy — nothing ties these three values together as *one* thing. An object solves this by bundling related data into key-value pairs, so it becomes one single "record":
-
-```js
-const student = {
-  name: "Divya",
-  roll: 21,
-  marks: 88
-};
+const mobile = { brand: "Samsung", model: "S23", price: 70000 };
+mobile.color = "Black";             // add
+mobile.price = 68000;               // update
+delete mobile.model;                // delete
+```
+```
+const car = { brand: "Honda", model: "City", year: 2022 };
+car.fuel = "Petrol";                // add
+car.year = 2023;                    // update
+delete car.model;                   // delete
 ```
 
-Now `student` is one variable holding everything about that one student. This is the core idea of an object: **group related data under one name.**
-
-
-<img src="./fetch-output.png" alt="real api response showing nested objects and arrays" width="700">
-
-## 2. Reading and writing values — dot vs bracket notation
-
-There are two ways to reach inside an object and grab a value.
-
-**Dot notation** — the one you'll use 90% of the time:
-```js
-console.log(student.name); // "Divya"
+// 3. Loop through an object's properties
 ```
-It's clean and easy to read, but it only works when you already know the exact key name while writing the code.
-
-**Bracket notation** — needed when the key isn't fixed:
-```js
-const key = "marks";
-console.log(student[key]); // 88 — the variable's value is used as the key
-```
-If you tried `student.key` instead, JavaScript would look for a property literally named `"key"`, which doesn't exist — so bracket notation is the only way to use a *variable* as a key.
-
-## 3. Adding, updating, and deleting properties
-
-```js
-student.grade = "A";        // adding a brand-new property
-student.name = "Divya B.";  // updating an existing one
-delete student.grade;       // removing it completely
-```
-
-You can also check whether a property even exists before using it, which avoids bugs:
-```js
-"name" in student;               // true
-student.hasOwnProperty("roll");  // true
-student.age;                     // undefined — not an error, just empty
-```
-
-## 4. Methods and the `this` keyword
-
-A **method** is nothing special — it's just a function that lives inside an object as one of its properties.
-
-```js
-const student = {
-  name: "Divya",
-  greet() {
-    console.log(`Hi, I'm ${this.name}`);
-  }
-};
-student.greet(); // "Hi, I'm Divya"
-```
-
-The keyword `this` inside a method refers to *the object the method was called on*. So when `student.greet()` runs, `this` becomes `student`, and `this.name` resolves to `"Divya"`.
-
-One important trap: arrow functions don't get their own `this`. If you write a method as an arrow function, `this` won't point to the object anymore — it'll grab whatever `this` was in the surrounding code. So for object methods, stick to the regular `methodName() {}` syntax shown above.
-
-## 5. Looping through an object
-
-Since an object isn't a numbered list like an array, you can't use a normal `for` loop on it directly. Instead:
-
-```js
-for (const key in student) {
-  console.log(key, student[key]);
+for (const key in employee) {
+  console.log(key, employee[key]);
 }
 ```
 
-Or use the built-in helper methods, which each give you a different slice of the object as an array:
-```js
-Object.keys(student);    // ["name", "roll", "marks"]
-Object.values(student);  // ["Divya", 21, 88]
-Object.entries(student); // [["name","Divya"], ["roll",21], ["marks",88]]
+// 4. Array of 5 students
 ```
-
-`Object.entries()` is the most useful of the three when you need *both* the key and the value at the same time — for example, while turning an object into a list of labeled rows.
-
-## 6. Nested objects
-
-Objects can contain other objects inside them, which lets you model real-world data more accurately:
-
-```js
-const student = {
-  name: "Divya",
-  address: {
-    city: "Haldwani",
-    state: "Uttarakhand"
-  }
-};
-
-console.log(student.address.city); // "Haldwani"
-```
-
-You just chain dots to go one level deeper each time. If you're not sure a nested property exists, optional chaining prevents a crash:
-```js
-console.log(student.address?.pincode); // undefined instead of an error
-```
-
-## 7. Arrays of objects — the shape real API data comes in
-
-This is the big one. Almost every real API doesn't hand back a single object — it hands back a **list of objects**:
-
-```js
-const users = [
-  { id: 1, name: "Divya", active: true },
-  { id: 2, name: "Bhumika", active: false }
+const students = [
+  { id: 1, name: "Rahul", marks: 92 },
+  { id: 2, name: "Aman", marks: 81 },
+  { id: 3, name: "Riya", marks: 96 },
+  { id: 4, name: "Neha", marks: 74 },
+  { id: 5, name: "Karan", marks: 88 }
 ];
 ```
 
-This is exactly what you get back from `response.json()` when calling a real API, which is why getting comfortable with array methods matters so much — this is the shape you'll be working with constantly.
-
-## 8. Array methods, one by one
-
-**`forEach`** — runs a function once per item. Returns nothing. Use it purely for side effects like logging.
-```js
-users.forEach(u => console.log(u.name));
+// 5. map -> all names
+```
+const names = students.map(s => s.name);
 ```
 
-**`map`** — transforms every item into something new, and gives back a brand-new array of the *same length*.
-```js
-const names = users.map(u => u.name); // ["Divya", "Rahul"]
+// 6. filter -> above 80 marks
+```
+const above80 = students.filter(s => s.marks > 80);
+```
+// 7. find -> search one student
+```
+const found = students.find(s => s.id === 2);
 ```
 
-**`filter`** — keeps only the items that pass a test, and gives back a new array that may be *shorter*.
-```js
-const activeUsers = users.filter(u => u.active); // [{id:1, name:"Divya", active:true}]
+// 8. reduce -> total marks
+```
+const total = students.reduce((sum, s) => sum + s.marks, 0);
 ```
 
-**`find`** — returns the *first* item that matches, or `undefined` if nothing matches. Unlike filter, it stops as soon as it finds one.
-```js
-const rahul = users.find(u => u.name === "Rahul");
+// 9. sort by marks
+```
+const sorted = [...students].sort((a, b) => a.marks - b.marks);
 ```
 
-**`some`** — asks "does at least one item match?" and returns `true`/`false`.
-```js
-const hasActive = users.some(u => u.active); // true
-```
-
-**`every`** — asks "do ALL items match?" and returns `true`/`false`.
-```js
-const allActive = users.every(u => u.active); // false, since Rahul isn't active
-```
-
-**`sort`** — sorts the array. Important: this changes the *original* array in place, it doesn't make a copy.
-```js
-users.sort((a, b) => a.id - b.id);
-```
-
-**`reduce`** — the most flexible one. It walks through the array and collapses it down into a single value (a total, a count, even a brand-new object).
-```js
-const activeCount = users.reduce((total, u) => u.active ? total + 1 : total, 0);
-// 1
-```
-
-### Chaining methods together
-Because `map`, `filter`, and `sort` all return arrays, you can chain them one after another:
-```js
-const activeNames = users.filter(u => u.active).map(u => u.name);
-// ["Divya"]
-```
-
-## Key takeaway
-
-An **object** groups related data together as one "thing." 
-An **array** is an ordered list of things. Knowing exactly what each array method hands back saves a lot of debugging later: `map`, `filter`, and `sort` give you arrays back, 
-`find` gives you one item, 
-`reduce` gives you one value, and
- `forEach` gives you nothing at all — it's only for side effects.
+  ## Takeaways
+- An object groups related data; an array is an ordered list of values.
+- `map` and `filter` produce new arrays; `find` returns one item; `reduce` returns one value; `forEach` returns nothing.
+- Real-world API data almost always arrives as an array of objects — these methods are the standard toolkit for working with it.
 
 ---
-
-
-
-
